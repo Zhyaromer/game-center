@@ -8,7 +8,7 @@
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
         <div class="p-6">
             @php
-              $isEdit = isset($user);
+            $isEdit = isset($user);
             @endphp
 
             <form
@@ -26,6 +26,9 @@
                         value="{{ old('name', $isEdit ? $user->name : '') }}"
                         type="text" name="name" id="name" placeholder="name"
                         class="form-control rounded-md">
+                    @error('name')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div>
@@ -34,6 +37,9 @@
                         value="{{ old('email', $isEdit ? $user->email : '') }}"
                         type="text" name="email" id="email" placeholder="email"
                         class="form-control rounded-md">
+                    @error('email')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div>
@@ -41,6 +47,9 @@
                     <input
                         type="password" name="password" id="password" placeholder="{{ $isEdit ? 'Leave blank to keep current password' : 'password' }}"
                         class="form-control rounded-md">
+                    @error('password')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div>
@@ -52,6 +61,9 @@
                         </option>
                         @endforeach
                     </select>
+                    @error('role')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div>

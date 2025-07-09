@@ -8,12 +8,13 @@
     <div class="bg-white shadow-md rounded-lg overflow-hidden">
         <div class="p-6">
             @php
-              $isEdit = isset($stations);
+            $isEdit = isset($data);
             @endphp
 
             <form
+                enctype="multipart/form-data"
                 class="grid grid-rows-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-                action="{{ $isEdit ? route('admin.stations.update', $stations->station_id) : route('admin.stations.store') }}"
+                action="{{ $isEdit ? route('admin.market_items.update', $data->market_item_id) : route('admin.market_items.store') }}"
                 method="POST">
                 @csrf
                 @if($isEdit)
@@ -23,38 +24,29 @@
                 <div>
                     <label for="name" class="form-label">name</label>
                     <input
-                        value="{{ old('name', $isEdit ? $stations->name : '') }}"
+                        value="{{ old('name', $isEdit ? $data->name : '') }}"
                         type="text" name="name" id="name" placeholder="name"
                         class="form-control rounded-md">
-                          @error('name')
+                        @error('name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                 </div>
 
                 <div>
-                    <label for="status" class="form-label">status</label>
-                    <select class="form-select rounded-md" name="status" id="status">
-                        @foreach(['available', 'unavailable', 'reserved'] as $status)
-                        <option value="{{ $status }}" {{ old('status', $isEdit ? $stations->status : '') === $status ? 'selected' : '' }}>
-                            {{ $status }}
-                        </option>
-                        @endforeach
-                    </select>
-                      @error('status')
+                    <label for="price" class="form-label">price</label>
+                    <input
+                        value="{{ old('price', $isEdit ? $data->price : '') }}"
+                        type="number" name="price" id="price" placeholder="price"
+                        class="form-control rounded-md">
+                          @error('price')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                 </div>
 
                 <div>
-                    <label for="type" class="form-label">type</label>
-                    <select class="form-select rounded-md" name="type" id="type">
-                        @foreach(['ps5', 'xbox', 'pc'] as $type)
-                        <option value="{{ $type }}" {{ old('type', $isEdit ? $stations->type : '') === $type ? 'selected' : '' }}>
-                            {{ $type }}
-                        </option>
-                        @endforeach
-                    </select>
-                      @error('type')
+                    <label for="image" class="form-label">image</label>
+                    <input type="file" name="image" id="image" class="form-control rounded-md">
+                      @error('image')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                 </div>

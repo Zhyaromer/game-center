@@ -3,63 +3,77 @@
 namespace App\Http\Controllers;
 
 use App\Models\market_item;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreMarketItemsValidation;
+
 
 class MarketItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $data = market_item::all();
+        return view('admin.market_items.index', compact('data'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('admin.market_items.form');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreMarketItemsValidation $request)
     {
-        //
+        $new_data = $request->validated();
+        if ($request->hasFile('image')) {
+            $name = $request->file('image')->hashName();
+            $request->file('image')->move("food-imgs", $name);
+
+            $new_data['image'] = $name;
+        }
+
+        market_item::create($new_data);
+        return redirect(route('admin.market_items.index', absolute: false));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(market_item $market_item)
+    public function show(string $id)
     {
-        //
+        $data = market_item::findOrFail($id);
+        return view('admin.market_items.show', compact('data'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(market_item $market_item)
+    public function edit(string $id)
     {
-        //
+        $data = market_item::findOrFail($id);
+        return view('admin.market_items.form', compact('data'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, market_item $market_item)
+    public function update(StoreMarketItemsValidation $request, string $id)
     {
-        //
+        $old_data = market_item::findOrFail($id);
+        $new_data = $request->validated();
+
+        $name = $old_data->image;
+        if ($request->hasFile('image')) {
+            $name = $request->file('image')->hashName();
+            $request->file('image')->move("food-imgs", $name);
+            if ($request->image) {
+                unlink("food-imgs/$old_data->image");
+            }
+        }
+
+        $new_data['image'] = $name;
+
+        market_item::findOrFail($id)->update($new_data);
+        return redirect()->route('admin.market_items.index')->with('message', 'data updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(market_item $market_item)
+    public function destroy(string $id)
     {
-        //
+        $data = market_item::findOrFail($id);
+
+        if ($data->image) {
+            unlink("food-imgs/$data->image");
+        }
+
+        $data->delete();
+        return redirect()->route('admin.market_items.index')->with('message', 'data deleted successfully');
     }
 }

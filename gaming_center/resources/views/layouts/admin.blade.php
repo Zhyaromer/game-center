@@ -56,9 +56,28 @@
                     </div>
                 </div>
 
+                <div x-data="{ open: false }" class="space-y-1" x-init="$watch('open', val => val ? $refs.menu.classList.remove('hidden') : $refs.menu.classList.add('hidden'))">
+                    <button @click="open = !open" class="flex justify-between items-center w-full px-3 py-2 text-left hover:bg-red-100 rounded">
+                        <span class="font-semibold text-gray-700">market_items</span>
+                        <svg class="w-4 h-4 transform transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div x-ref="menu" class="pl-4 space-y-1 hidden">
+                        <a href="{{ route('admin.market_items.index') }}"
+                            class="block px-2 py-1 text-sm rounded hover:bg-red-100 {{ request()->routeIs('admin.market_items.index') ? 'bg-red-100 font-medium text-red-600' : '' }}">
+                            Show market_items
+                        </a>
+                        <a href="{{ route('admin.market_items.create') }}"
+                            class="block px-2 py-1 text-sm rounded hover:bg-red-100 {{ request()->routeIs('admin.market_items.create') ? 'bg-red-100 font-medium text-red-600' : '' }}">
+                            Create market_items
+                        </a>
+                    </div>
+                </div>
+
                 <a href="#"
                     class="block px-3 py-2 rounded hover:bg-red-100 font-semibold text-gray-700">
-                   dashboard
+                    dashboard
                 </a>
             </nav>
         </aside>
@@ -66,7 +85,7 @@
         <div class="flex-1 ml-64 flex flex-col min-h-screen">
 
             <header class="bg-white shadow-md px-6 py-4 flex justify-between items-center">
-                <div class="text-xl font-semibold">admin/users</div>
+                <div class="text-xl font-semibold">Gaming Center</div>
                 <div class="flex items-center space-x-4">
                     <span class="text-gray-700">{{ Auth::user()->email }}</span>
                     <form method="POST" action="{{ route('logout') }}">
@@ -82,15 +101,6 @@
                     {{ session()->get('message') }}
                 </div>
                 @endif
-
-                @if ($errors->any())
-                @foreach ($errors->all() as $error)
-                <div class="bg-red-100 border border-red-300 text-red-700 px-4 py-2 rounded mb-2">
-                    {{ $error }}
-                </div>
-                @endforeach
-                @endif
-
                 @yield('content')
             </main>
         </div>
